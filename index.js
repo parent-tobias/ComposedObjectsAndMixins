@@ -11,7 +11,10 @@
  * 
  ****/
 
-const ClassCharacter = (type)=> (...skills) => (initialState)  => (name) => {
+const ClassCharacter = (type) =>
+  (...skills) =>
+    (initialState)  =>
+      (name) => {
   let state = {type, name, ...initialState};
 
   /****
@@ -25,19 +28,19 @@ const ClassCharacter = (type)=> (...skills) => (initialState)  => (name) => {
   let abilities = skills.map((skill)=>skill(state));
 
 
-    /****
-     * Rather than requiring that the specific character class
-     *   pass in a status function, we can iterate over the state
-     *   object and define *dynamic* getters for each key in that
-     *   state. Frankly, I'm surprised this works.
-     ****/
-    let status = (()=>{
-      let statNames = Object.keys(state);
-      return statNames.reduce((acc, key)=>{
-        Object.defineProperty(acc, key, {get: ()=>state[key]});
-        return acc;
-      },{})
-    })();
+  /****
+   * Rather than requiring that the specific character class
+   *   pass in a status function, we can iterate over the state
+   *   object and define *dynamic* getters for each key in that
+   *   state. Frankly, I'm surprised this works.
+   ****/
+  let status = (()=>{
+    let statNames = Object.keys(state);
+    return statNames.reduce((acc, key)=>{
+      Object.defineProperty(acc, key, {get: ()=>state[key]});
+      return acc;
+    },{})
+  })();
 
   return Object.assign(
     {
@@ -98,5 +101,8 @@ pally.fight();
 pally.fight();
 pally.cast("Ice storm");
 pally.cast("Dante's Inferno");
-console.log(Object.entries(pally.status) )
-console.log(pally.status.health, pally.status.mana );
+console.log(`---------${pally.name}----------
+Health:  ${pally.status.health},
+Stamina: ${pally.status.stamina},
+Mana:    ${pally.status.mana}
+----------------------------`);
